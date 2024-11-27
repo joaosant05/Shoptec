@@ -63,7 +63,8 @@ class SistemaVendasApp:
         # Configuração da janela principal
         self.root = root
         self.root.title("Sistema de Vendas")
-        self.root.geometry("600x500")
+        self.root.geometry("600x600")
+        self.root.config(bg="#e0f7fa")  # Cor de fundo verde água suave
 
         # Seções da interface
         self.create_main_menu()
@@ -71,19 +72,21 @@ class SistemaVendasApp:
         self.create_navigation_buttons()
         self.create_venda_section()
         self.create_reposicao_section()
+        self.create_vendas_realizadas_section()
 
         # Ocultar seções inicialmente
         self.venda_frame.pack_forget()
         self.reposicao_frame.pack_forget()
+        self.vendas_realizadas_frame.pack_forget()
 
     def create_main_menu(self):
-        menu_frame = tk.Frame(self.root)
+        menu_frame = tk.Frame(self.root, bg="#e0f7fa")
         menu_frame.pack(pady=10)
 
-        tk.Label(menu_frame, text="Sistema de Vendas e Estoque", font=("Arial", 16)).pack()
+        tk.Label(menu_frame, text="Sistema de Vendas e Estoque", font=("Arial", 16), bg="#e0f7fa", fg="#00796b").pack()
 
     def create_estoque_table(self):
-        self.table_frame = tk.Frame(self.root)
+        self.table_frame = tk.Frame(self.root, bg="#e0f7fa")
         self.table_frame.pack(pady=10)
 
         self.table = ttk.Treeview(self.table_frame, columns=("Código", "Descrição", "Quantidade", "Preço"), show="headings")
@@ -101,30 +104,31 @@ class SistemaVendasApp:
             self.table.insert("", "end", values=(row['codigo'], row['descricao'], row['quantidade'], row['preco']))
 
     def create_navigation_buttons(self):
-        nav_frame = tk.Frame(self.root)
+        nav_frame = tk.Frame(self.root, bg="#e0f7fa")
         nav_frame.pack(pady=20)
 
-        tk.Button(nav_frame, text="Abrir Registro de Venda", command=self.show_venda_section).pack(side=tk.LEFT, padx=10)
-        tk.Button(nav_frame, text="Abrir Reposição de Estoque", command=self.show_reposicao_section).pack(side=tk.LEFT, padx=10)
+        tk.Button(nav_frame, text="Abrir Registro de Venda", command=self.show_venda_section, bg="#00796b", fg="white", relief="flat").pack(side=tk.LEFT, padx=10)
+        tk.Button(nav_frame, text="Abrir Reposição de Estoque", command=self.show_reposicao_section, bg="#00796b", fg="white", relief="flat").pack(side=tk.LEFT, padx=10)
+        tk.Button(nav_frame, text="Ver Vendas Realizadas", command=self.show_vendas_realizadas_section, bg="#00796b", fg="white", relief="flat").pack(side=tk.LEFT, padx=10)
 
     def create_venda_section(self):
-        self.venda_frame = tk.Frame(self.root)
+        self.venda_frame = tk.Frame(self.root, bg="#e0f7fa")
         
-        tk.Label(self.venda_frame, text="Registro de Venda", font=("Arial", 14)).pack()
+        tk.Label(self.venda_frame, text="Registro de Venda", font=("Arial", 14), bg="#e0f7fa", fg="#00796b").pack()
 
-        tk.Label(self.venda_frame, text="Nome do Cliente:").pack()
+        tk.Label(self.venda_frame, text="Nome do Cliente:", bg="#e0f7fa", fg="#00796b").pack()
         self.nome_cliente_entry = tk.Entry(self.venda_frame)
         self.nome_cliente_entry.pack()
 
-        tk.Label(self.venda_frame, text="Código do Produto:").pack()
+        tk.Label(self.venda_frame, text="Código do Produto:", bg="#e0f7fa", fg="#00796b").pack()
         self.codigo_produto_entry = tk.Entry(self.venda_frame)
         self.codigo_produto_entry.pack()
 
-        tk.Label(self.venda_frame, text="Quantidade:").pack()
+        tk.Label(self.venda_frame, text="Quantidade:", bg="#e0f7fa", fg="#00796b").pack()
         self.quantidade_entry = tk.Entry(self.venda_frame)
         self.quantidade_entry.pack()
 
-        tk.Button(self.venda_frame, text="Registrar Venda", command=self.registrar_venda).pack(pady=5)
+        tk.Button(self.venda_frame, text="Registrar Venda", command=self.registrar_venda, bg="#00796b", fg="white", relief="flat").pack(pady=5)
 
     def registrar_venda(self):
         nome_cliente = self.nome_cliente_entry.get()
@@ -147,24 +151,25 @@ class SistemaVendasApp:
             cliente.registrar_compra(produto, quantidade)
             self.estoque.baixar_estoque(codigo_produto, quantidade)
             self.update_estoque_table()
+            self.update_vendas_table()  # Atualiza a tabela de vendas após cada venda
             messagebox.showinfo("Sucesso", f"Venda de {quantidade}x {produto.descricao} registrada para {nome_cliente}.")
         else:
             messagebox.showerror("Erro", "Quantidade solicitada não disponível em estoque.")
 
     def create_reposicao_section(self):
-        self.reposicao_frame = tk.Frame(self.root)
+        self.reposicao_frame = tk.Frame(self.root, bg="#e0f7fa")
 
-        tk.Label(self.reposicao_frame, text="Repor Estoque", font=("Arial", 14)).pack()
+        tk.Label(self.reposicao_frame, text="Repor Estoque", font=("Arial", 14), bg="#e0f7fa", fg="#00796b").pack()
 
-        tk.Label(self.reposicao_frame, text="Código do Produto:").pack()
+        tk.Label(self.reposicao_frame, text="Código do Produto:", bg="#e0f7fa", fg="#00796b").pack()
         self.repor_codigo_entry = tk.Entry(self.reposicao_frame)
         self.repor_codigo_entry.pack()
 
-        tk.Label(self.reposicao_frame, text="Quantidade a Adicionar:").pack()
+        tk.Label(self.reposicao_frame, text="Quantidade a Adicionar:", bg="#e0f7fa", fg="#00796b").pack()
         self.repor_quantidade_entry = tk.Entry(self.reposicao_frame)
         self.repor_quantidade_entry.pack()
 
-        tk.Button(self.reposicao_frame, text="Repor Estoque", command=self.repor_estoque).pack(pady=5)
+        tk.Button(self.reposicao_frame, text="Repor Estoque", command=self.repor_estoque, bg="#00796b", fg="white", relief="flat").pack(pady=5)
 
     def repor_estoque(self):
         codigo = int(self.repor_codigo_entry.get())
@@ -175,14 +180,41 @@ class SistemaVendasApp:
 
     def show_venda_section(self):
         self.reposicao_frame.pack_forget()
+        self.vendas_realizadas_frame.pack_forget()
         self.venda_frame.pack(pady=10)
 
     def show_reposicao_section(self):
         self.venda_frame.pack_forget()
+        self.vendas_realizadas_frame.pack_forget()
         self.reposicao_frame.pack(pady=10)
 
-# Inicialização dos produtos e do sistema
-produtos = [
+    def show_vendas_realizadas_section(self):
+        self.venda_frame.pack_forget()
+        self.reposicao_frame.pack_forget()
+        self.vendas_realizadas_frame.pack(pady=10)
+
+    def create_vendas_realizadas_section(self):
+        self.vendas_realizadas_frame = tk.Frame(self.root, bg="#e0f7fa")
+        tk.Label(self.vendas_realizadas_frame, text="Vendas Realizadas", font=("Arial", 14), bg="#e0f7fa", fg="#00796b").pack()
+
+        self.vendas_table = ttk.Treeview(self.vendas_realizadas_frame, columns=("Cliente", "Código", "Descrição", "Quantidade", "Total"), show="headings")
+        for col in self.vendas_table["columns"]:
+            self.vendas_table.heading(col, text=col)
+            self.vendas_table.column(col, width=100)
+        self.vendas_table.pack()
+
+    def update_vendas_table(self):
+        for i in self.vendas_table.get_children():
+            self.vendas_table.delete(i)
+
+        for cliente in self.clientes.values():
+            if cliente.compras:
+                for compra in cliente.compras:
+                    self.vendas_table.insert("", "end", values=(cliente.nome, compra['Código'], compra['Descrição'], compra['Quantidade'], compra['Total']))
+
+if __name__ == "__main__":
+    # Inicializando os produtos e o estoque
+    produtos = [
     Produto(1, "Calça", 20, 112.00),
     Produto(2, "Camisa", 18, 95.00),
     Produto(3, "Bermuda", 23, 45.90),
@@ -194,7 +226,9 @@ produtos = [
     Produto(9, "Bota", 3, 219.90)
 ]
 
-estoque = Estoque(produtos)
-root = tk.Tk()
-app = SistemaVendasApp(root, estoque)
-root.mainloop()
+    estoque = Estoque(produtos)
+
+    # Inicializando a aplicação
+    root = tk.Tk()
+    app = SistemaVendasApp(root, estoque)
+    root.mainloop()
